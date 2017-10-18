@@ -30,6 +30,18 @@ void forward()   //Drives forward
   lServo.writeMicroseconds(1600);
 }
 
+void rightCirc()
+{
+  lServo.writeMicroseconds(1800);
+  rServo.writeMicroseconds(1400);
+}
+
+void leftCirc()
+{
+  lServo.writeMicroseconds(1400);
+  rServo.writeMicroseconds(1800);
+}
+
 void setup() {
   rServo.attach(9);  // attaches the servos
   lServo.attach(10);
@@ -59,8 +71,8 @@ void loop() {
   Serial.println();
   //******Ping Sensor******//
 
-  if (cm < 15)
-  {
+  /*if (cm < 15)
+    {
     if(random(1,3)==1){
       turnLeft();
       delay(500);
@@ -68,16 +80,14 @@ void loop() {
         turnRight();
         delay(500);
         }
-  } else {
+    } else {
     stopServos();
-  }
+    }*/
+
 }
 
 long microsecondsToCentimeters(long microseconds) //Ultrasonic Conversion
 {
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // The ping travels out and back, so to find the distance of the
-  // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
 
