@@ -6,7 +6,8 @@ Servo rServo;
 const int trigPin = 2; //Ultrasonic Sensor
 const int echoPin = 4; //Ports
 
-
+int num;
+long duration, cm;
 void stopServos()             //Stops driving servos
 {
   rServo.writeMicroseconds(1500);
@@ -30,7 +31,11 @@ void forward()   //Drives forward
   rServo.writeMicroseconds(1400);
   lServo.writeMicroseconds(1600);
 }
-
+void reverse()
+{
+  rServo.writeMicroseconds(1600);
+  lServo.writeMicroseconds(1400);
+}
 void rightCirc()
 {
   lServo.writeMicroseconds(1800);
@@ -43,10 +48,8 @@ void leftCirc()
   rServo.writeMicroseconds(1800);
 }
 
-void ping() {
+void pingSense() {
   //******Ping Sensor******//
-  int randNumber = random(1, 5); //# between 1 and 4 to indicate what it should do when it sees the sensor
-  long duration, cm;
   pinMode(trigPin, OUTPUT);
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -65,25 +68,26 @@ void ping() {
   Serial.println();
   //******Ping Sensor******//
 
-  if (cm < 15)
-  {
-    if (randNumber == 1) {
-      turnLeft();
-      delay(500);
-    } else if (randNumber == 2) {
-      turnRight();
-      delay(500);
-    } else if (randNumber == 3) {
-      leftCirc();
-      delay(2000);
-    } else if (randNumber == 4) {
-      rightCirc();
-      delay(2000);
-    }
-  } else {
-    stopServos();
+}
+void pingLeft() {
+  pingSense();
+  forward();
+  if (cm < 20) {
+    reverse();
+    delay(500);
+    turnLeft();
   }
 
+}
+
+void pingRight() {
+  pingSense();
+  forward();
+  if (cm < 20) {
+    reverse();
+    delay(500);
+    turnRight();
+  }
 }
 
 void setup() {
@@ -91,11 +95,30 @@ void setup() {
   lServo.attach(10);
   stopServos();
   Serial.begin(9600);//initially stop servos
-  delay (2500);   //wait 2.5 seconds until main loop starts
+  delay (5000);   //wait 2.5 seconds until main loop starts
+
+
 }
 
 void loop() {
-  ping();
+  pingSense();
+
+  num = random(int(2));
+  switch (num) {
+    case 0:
+      for (int i = 0; i < 2; i++) {
+        pingLeft();
+      }
+      break;
+    case 1:
+    for (int j = 0; j < 2; j++) {
+        pingRight();
+      }
+      break;
+      //default:
+      //break;
+  }
+  delay (1000);
 
 }
 
