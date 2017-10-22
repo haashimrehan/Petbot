@@ -6,6 +6,7 @@ Servo rServo;
 const int trigPin = 2; //Ultrasonic Sensor
 const int echoPin = 4; //Ports
 
+
 void stopServos()             //Stops driving servos
 {
   rServo.writeMicroseconds(1500);
@@ -30,16 +31,21 @@ void forward()   //Drives forward
   lServo.writeMicroseconds(1600);
 }
 
-void setup() {
-  rServo.attach(9);  // attaches the servos
-  lServo.attach(10);
-  stopServos();
-  Serial.begin(9600);//initially stop servos
-  delay (2500);   //wait 2.5 seconds until main loop starts
+void rightCirc()
+{
+  lServo.writeMicroseconds(1800);
+  rServo.writeMicroseconds(1400);
 }
 
-void loop() {
+void leftCirc()
+{
+  lServo.writeMicroseconds(1400);
+  rServo.writeMicroseconds(1800);
+}
+
+void ping() {
   //******Ping Sensor******//
+  int randNumber = random(1, 5); //# between 1 and 4 to indicate what it should do when it sees the sensor
   long duration, cm;
   pinMode(trigPin, OUTPUT);
   digitalWrite(trigPin, LOW);
@@ -61,23 +67,40 @@ void loop() {
 
   if (cm < 15)
   {
-    if(random(1,3)==1){
+    if (randNumber == 1) {
       turnLeft();
       delay(500);
-      } else {
-        turnRight();
-        delay(500);
-        }
+    } else if (randNumber == 2) {
+      turnRight();
+      delay(500);
+    } else if (randNumber == 3) {
+      leftCirc();
+      delay(2000);
+    } else if (randNumber == 4) {
+      rightCirc();
+      delay(2000);
+    }
   } else {
     stopServos();
   }
+
+}
+
+void setup() {
+  rServo.attach(9);  // attaches the servos
+  lServo.attach(10);
+  stopServos();
+  Serial.begin(9600);//initially stop servos
+  delay (2500);   //wait 2.5 seconds until main loop starts
+}
+
+void loop() {
+  ping();
+
 }
 
 long microsecondsToCentimeters(long microseconds) //Ultrasonic Conversion
 {
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // The ping travels out and back, so to find the distance of the
-  // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
 
