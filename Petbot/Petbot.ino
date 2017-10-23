@@ -6,7 +6,8 @@ Servo rServo;
 const int trigPin = 2; //Ultrasonic Sensor
 const int echoPin = 4; //Ports
 
-int num;
+int num1;
+int num2;
 long duration, cm;
 void stopServos()             //Stops driving servos
 {
@@ -48,6 +49,27 @@ void leftCirc()        //drives in a circle to the left
   rServo.writeMicroseconds(1800);
 }
 
+void lCircles()
+{
+  pingSense();
+  if (cm < 20)
+  {
+    reverse();
+    delay(600);
+    lServo.writeMicroseconds(1650);
+    rServo.writeMicroseconds(1650);
+    delay(1500);
+  }
+
+}
+
+void rCircles()
+{
+  lServo.writeMicroseconds(1350);
+  rServo.writeMicroseconds(1350);
+}
+
+
 void pingSense()
 { //******Ping Sensor******//
   pinMode(trigPin, OUTPUT);
@@ -75,6 +97,7 @@ void pingLeft()
     reverse();
     delay(500);
     turnLeft();
+    delay(1000);
   }
 }
 
@@ -87,8 +110,10 @@ void pingRight()
     reverse();
     delay(500);
     turnRight();
+    delay(1000);
   }
 }
+
 
 void setup() {
   rServo.attach(9);  // attaches the servos
@@ -99,21 +124,27 @@ void setup() {
 }
 
 void loop() {
-  pingSense(); //Ping sensor detecting distance
-
-  num = random(int(2));   //randomly choses between the two cases (0 and 1)
-  switch (num) {
-    case 0:
-      for (int i = 0; i < 2; i++) { //Reverses then turns left. does this twice
-        pingLeft();
-      }
-      break;
-    case 1:
-      for (int j = 0; j < 2; j++) {   //Reverses then turns left. does this twice
-        pingRight();
-      }
-      break;
+  for (int k = 0; k < 100; k++) {
+    forward();
+    pingSense(); //Ping sensor detecting distance
+    num1 = random(int(3));   //randomly choses between the three cases
+    switch (num1) {
+      case 0:
+        for (int i = 0; i < 2; i++) { //Reverses then turns left. does this twice
+          pingLeft();
+        }
+        break;
+      case 1:
+        for (int j = 0; j < 2; j++) {   //Reverses then turns left. does this twice
+          pingRight();
+        }
+        break;
+      case 2:
+        lCircles();
+        break;
+    }
   }
+
   delay (1000);
 
 }
