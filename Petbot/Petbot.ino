@@ -61,7 +61,7 @@ void leftCirc() //drives in a circle to the left
   rServo.writeMicroseconds(1800);
 }
 
-void lCircles() {
+void lCircles() { //makes a quick turn to the right
   pingSense();
   if (cm < 15) {
     reverse();
@@ -69,6 +69,17 @@ void lCircles() {
     lServo.writeMicroseconds(1650);
     rServo.writeMicroseconds(1650);
     delay(1500);
+  }
+}
+
+void reverseAway() {
+  pingSense();
+  if (cm < 15) {
+    rServo.writeMicroseconds(1700);
+    lServo.writeMicroseconds(1300);
+    delay(800);
+    turnRight90();
+    delay(200);
   }
 }
 
@@ -128,7 +139,7 @@ void loop() {
     for (int k = 0; k < 100; k++) {
      forward();
      pingSense(); //Ping sensor detecting distance
-     num1 = random(int(3));   //randomly choses between the three cases
+     num1 = random(int(4));   //randomly choses between the three cases
      switch (num1) {
        case 0:
          for (int i = 0; i < 2; i++) { //Reverses then turns left. does this twice
@@ -136,17 +147,20 @@ void loop() {
          }
          break;
        case 1:
-         for (int j = 0; j < 2; j++) {   //Reverses then turns left. does this twice
+         for (int j = 0; j < 2; j++) {   //Reverses then turns right. does this twice
            pingRight();
          }
          break;
        case 2:
          lCircles();
          break;
+      case 3:
+      reverseAway();
+          break;
      }
     }
 
-    delay (1000);
+    delay (600);
 
 }
 
